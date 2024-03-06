@@ -107,15 +107,24 @@ class SquadcastProvider(BaseProvider):
 
     def _create_incidents(self, headers: dict, message: str, description: str, priority: str = "",
                           status: str = "",
-                          event_id: str = ""):
+                          event_id: str = "",
+                          additional_json: str = ""):
 
         body = json.dumps({
             "message": message,
             "description": description,
             "priority": priority,
             "status": status,
-            "event_id": event_id
+            "event_id": event_id,
+            **json.loads(additional_json)
         })
+
+        # # Add additional_json to the body
+        # if additional_json != "":
+        #     try:
+        #         body = json.dumps({**json.loads(body), **json.loads(additional_json)})
+        #     except json.JSONDecodeError as e:
+        #         raise Exception(f"additional_json is not a valid JSON: {str(e)}")
 
         return requests.post(self.authentication_config.webhook_url, data=body, headers=headers)
 
@@ -130,7 +139,9 @@ class SquadcastProvider(BaseProvider):
     def _notify(self, notify_type: str, message: str = "", description: str = "", incident_id: str = "",
                 priority: str = "",
                 status: str = "",
-                event_id: str = "", attachments: list = [], **kwargs) -> dict:
+                event_id: str = "",
+                additional_json: str = "",
+                attachments: list = [], **kwargs) -> dict:
         """
         Create an incident or notes using the Squadcast API.
         """
@@ -152,7 +163,7 @@ class SquadcastProvider(BaseProvider):
             if message == "" or description == "":
                 raise Exception(f"message: \"{message}\" and description: \"{description}\" cannot be empty")
             resp = self._create_incidents(headers=headers, message=message, description=description, priority=priority,
-                                          status=status, event_id=event_id)
+                                          status=status, event_id=event_id, additional_json=additional_json)
         elif notify_type == 'notes':
             if message == "" or incident_id == "":
                 raise Exception(f"message: \"{message}\" and incident_id: \"{incident_id}\" cannot be empty")
