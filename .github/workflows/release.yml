@@ -21,7 +21,6 @@ jobs:
     - name: Release Keep
       uses: python-semantic-release/python-semantic-release@master
       with:
-        directory: keep
         git_committer_name: Keep Release Bot
         git_committer_email: no-reply@keephq.dev
         github_token: ${{ secrets.GITHUB_TOKEN }}
