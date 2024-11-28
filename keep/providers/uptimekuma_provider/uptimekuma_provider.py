@@ -15,9 +15,9 @@ from keep.providers.models.provider_config import ProviderConfig, ProviderScope
 
 
 @pydantic.dataclasses.dataclass
-class UptimeKumaProviderAuthConfig:
+class UptimekumaProviderAuthConfig:
     """
-    UptimeKumaProviderAuthConfig is a class that holds the authentication information for the UptimekumaProvider.
+    UptimekumaProviderAuthConfig is a class that holds the authentication information for the UptimekumaProvider.
     """
 
     host_url: str = dataclasses.field(
@@ -48,7 +48,7 @@ class UptimeKumaProviderAuthConfig:
     )
 
 
-class UptimeKumaProvider(BaseProvider):
+class UptimekumaProvider(BaseProvider):
     PROVIDER_DISPLAY_NAME = "UptimeKuma"
     PROVIDER_TAGS = ["alert"]
     PROVIDER_CATEGORY = ["Monitoring"]
@@ -87,7 +87,7 @@ class UptimeKumaProvider(BaseProvider):
         return {"alerts": False}
 
     def validate_config(self):
-        self.authentication_config = UptimeKumaProviderAuthConfig(
+        self.authentication_config = UptimekumaProviderAuthConfig(
             **self.config.authentication
         )
         if self.authentication_config.host_url is None:
@@ -189,7 +189,7 @@ if __name__ == "__main__":
         },
     )
 
-    provider = UptimeKumaProvider(
+    provider = UptimekumaProvider(
         context_manager=context_manager,
         provider_id="uptimekuma",
         config=config,
